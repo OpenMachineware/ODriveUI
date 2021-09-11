@@ -1,0 +1,5 @@
+ODRIVE_CONF_DIR = '.odrive_ui'
+ODRIVE_CONF_FILE = 'odrive.conf'
+BUTTON_CHANGED_COLOR = 'background-color: rgb(246, 224, 143);'
+SAMPLING_PERIOD = 20
+STATE_UPDATING_PERIOD = 250
