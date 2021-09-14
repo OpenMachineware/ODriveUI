@@ -21,7 +21,9 @@ pip install PySide6
 pip install Pillow
 ```
 
-- Run it
+- Run
+
+Power on and plug your ODrive board in, first.
 ```
 python main.py
 ```
