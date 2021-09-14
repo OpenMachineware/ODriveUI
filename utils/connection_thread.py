@@ -15,5 +15,8 @@ class ODriveConnector(QThread):
         self._isRunning = False
 
     def run(self):
-        self.drives = odrive.find_any()
-        self.sig_odrive_connected.emit([self.drives])
+        try:
+            self.drives = odrive.find_any(timeout=3)
+            self.sig_odrive_connected.emit([self.drives])
+        except:
+            self.sig_odrive_connected.emit([])

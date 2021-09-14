@@ -41,7 +41,14 @@ class Splash(QWidget):
         self.close()
 
         self.drive_list = drive_list
-        if len(drive_list) > 1:
+        if len(drive_list) == 0:
+            QMessageBox.information(self, 'Info', 'Can not find drive, '
+                                                  'we will enter offline mode.',
+                                    QMessageBox.Ok, QMessageBox.Ok)
+            self.drive = None
+            self.drive_index = None
+            self.launch_control()
+        elif len(drive_list) > 1:
             self.select_dialog = SelectDrive(drive_list)
             self.select_dialog.sig_odrive_select.connect(self.select_drive)
             self.select_dialog.show()

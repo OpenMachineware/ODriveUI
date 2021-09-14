@@ -19,6 +19,7 @@ pip install odrive
 pip install pyqtgraph
 pip install PySide6
 pip install Pillow
+pip install pyinstaller
 ```
 
 - Run
@@ -28,7 +29,17 @@ Power on and plug your ODrive board in, first.
 python main.py
 ```
 
+## Pack
+- Pack a `release` version
+```
+pyinstaller -w -F main.py
+```
+
+- Pack a `debug` version
+```
+pyinstaller -c -F main.py
+```
 ## TODO
-- Offline mode when the board can not be connected.
+- Disconnect support.
 - Reconnect when the board rebooted.
 - Record waves.

@@ -19,7 +19,12 @@ from widgets.select_drive import SelectDrive
 class Dashboard(QWidget):
     def __init__(self, conf, drive, drive_index, parent=None):
         super(Dashboard, self).__init__(parent)
-        self.setWindowTitle('Dashboard: ' + 'odrv' + str(drive_index))
+        if drive is None or drive_index is None:
+            self.setWindowTitle('Dashboard: ' + 'offline')
+            self.online = False
+        else:
+            self.online = True
+            self.setWindowTitle('Dashboard: ' + 'odrv' + str(drive_index))
         self.resize(1280, 768)
 
         self.conf = conf
@@ -29,7 +34,6 @@ class Dashboard(QWidget):
         self.drive_index = drive_index
         self.select_dialog = None
         self.config_window = None
-        self.connected = True
         self.play = False
         self.record = False
         self.timer_state = None
@@ -573,7 +577,10 @@ class Dashboard(QWidget):
         config_h_box = QHBoxLayout()
         self.config_btn_connect = QPushButton()
         self.config_btn_connect.setMaximumWidth(30)
-        self.config_btn_connect.setIcon(self.icon_connect)
+        if self.online:
+            self.config_btn_connect.setIcon(self.icon_connect)
+        else:
+            self.config_btn_connect.setIcon(self.icon_disconnect)
         self.config_btn_connect.clicked.connect(self.odrive_connect)
         self.config_btn_language = QPushButton()
         self.config_btn_language.setMaximumWidth(30)
@@ -968,6 +975,10 @@ class Dashboard(QWidget):
         self.axis1_btn_input_position.setDisabled(True)
 
     def op_start_clicked(self):
+        if not self.online:
+            QMessageBox.information(self, 'Info', 'Connect drive first!',
+                                    QMessageBox.Ok, QMessageBox.Ok)
+            return
         if not self.play:
             self.play = True
             self.op_btn_start.setIcon(self.icon_stop)
@@ -1425,7 +1436,10 @@ class Dashboard(QWidget):
     # TODO: Clean this func maybe
     def odrive_connected(self, drive_list):
         self.drive_list = drive_list
-        if len(drive_list) > 1:
+        if len(drive_list) == 0:
+            QMessageBox.information(self, 'Info', 'Can not find drive!',
+                                    QMessageBox.Ok, QMessageBox.Ok)
+        elif len(drive_list) > 1:
             self.select_dialog = SelectDrive(drive_list)
             self.select_dialog.sig_odrive_select.connect(self.select_drive)
             self.select_dialog.show()
@@ -1434,7 +1448,7 @@ class Dashboard(QWidget):
             self.drive_index = 0
         self.setWindowTitle('Dashboard: ' + 'odrv' + str(self.drive_index))
         self.config_btn_connect.setIcon(self.icon_connect)
-        self.connected = True
+        self.online = True
 
     # TODO: Clean this func maybe
     def select_drive(self, i):
@@ -1442,7 +1456,7 @@ class Dashboard(QWidget):
         self.drive_index = i
 
     def config_clicked(self):
-        if not self.connected:
+        if not self.online:
             QMessageBox.information(self, 'Info', 'Connect drive first!',
                                     QMessageBox.Ok, QMessageBox.Ok)
             return
