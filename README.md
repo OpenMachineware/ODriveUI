@@ -15,11 +15,7 @@ source venv/bin/activate
 
 - Install requirements
 ```
-pip install odrive
-pip install pyqtgraph
-pip install PySide6
-pip install Pillow
-pip install pyinstaller
+pip install -r requirements.txt
 ```
 
 - Run
