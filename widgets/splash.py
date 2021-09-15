@@ -40,10 +40,10 @@ class Splash(QWidget):
 
     def init(self):
         self.init_worker = InitThread()
-        self.init_worker.sig_conf.connect(self.process_set_part)
+        self.init_worker.sig_conf.connect(self.process_set)
         self.init_worker.start()
 
-    def process_set_part(self, conf, msg, num):
+    def progress_set(self, conf, msg, num):
         self.conf = conf
         self.info.setText(msg)
         self.progress_bar.setValue(num)
