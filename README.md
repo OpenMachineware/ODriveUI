@@ -2,6 +2,9 @@
 
 A GUI for ODrive operation.
 
+We currently work with odrive-0.5.2.post0, for the 0.5.3.post0 with a bug 
+about timeout.
+
 ## Usage
 
 - Setup python environment
@@ -15,10 +18,9 @@ source venv/bin/activate
 
 - Install requirements
 ```
-pip install odrive
+pip install odrive==0.5.2.post0
 pip install pyqtgraph
 pip install PySide6
-pip install Pillow
 pip install pyinstaller
 ```
 
