@@ -16,4 +16,4 @@ def load_conf():
             conf = json.load(f)
     else:
         conf = {}
-    return conf
+    return 0, conf

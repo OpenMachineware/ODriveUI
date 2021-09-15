@@ -3,35 +3,54 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 from utils.connection_thread import ODriveConnector
+from utils.init import InitThread
 from widgets.control import Dashboard
 from widgets.select_drive import SelectDrive
 
 
 class Splash(QWidget):
-    def __init__(self, conf, parent=None):
+    def __init__(self, parent=None):
         super(Splash, self).__init__(parent)
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.resize(300, 300)
 
-        self.conf = conf
+        self.conf = None
         self.main_window = None
         self.select_dialog = None
         self.drive_list = None
         self.drive = None
         self.drive_index = 0
+        self.init_worker = None
+        self.odrive_worker = None
 
-        # FIXME: Resize this window or logo something.
         main_v_box = QVBoxLayout()
         self.label_logo = QLabel()
-        self.label_logo.resize(300, 300)
         pix = QPixmap('resources/splash.jpg')
         self.label_logo.setPixmap(pix)
         self.label_logo.setScaledContents(True)
+        info_h_box = QHBoxLayout()
+        self.info = QLabel()
+        self.progress_bar = QProgressBar()
+        info_h_box.addWidget(self.info)
+        info_h_box.addWidget(self.progress_bar)
         main_v_box.addWidget(self.label_logo)
+        main_v_box.addLayout(info_h_box)
         self.setLayout(main_v_box)
 
-        # TODO: Call init thread here.
+        self.init()
 
+    def init(self):
+        self.init_worker = InitThread()
+        self.init_worker.sig_conf.connect(self.process_set_part)
+        self.init_worker.start()
+
+    def process_set_part(self, conf, msg, num):
+        self.conf = conf
+        self.info.setText(msg)
+        self.progress_bar.setValue(num)
+        if num == 100:
+            self.run_main_process()
+
+    def run_main_process(self):
         self.odrive_worker = ODriveConnector()
         self.odrive_worker.sig_odrive_connected.connect(
             self.odrive_connected)

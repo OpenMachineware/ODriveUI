@@ -3,27 +3,19 @@ import sys
 from PySide6.QtCore import *
 from PySide6.QtWidgets import *
 
-from utils.config import load_conf
 from widgets.splash import Splash
 
 
-# TODO: Make init a thread to be called in splash screen.
-def init():
-    conf = load_conf()
-    return conf
-
-
-def main_widget(conf):
+def main_widget():
     QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
-    main_window = Splash(conf)
+    main_window = Splash()
     main_window.show()
     sys.exit(app.exec())
 
 
 def main():
-    conf = init()
-    main_widget(conf)
+    main_widget()
 
 
 if __name__ == '__main__':
